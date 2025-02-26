@@ -6,6 +6,7 @@ function TeachersProvider({ children }) {
   const [teachers, setTeachers] = useState([]);
   const [teacher, setTeacher] = useState(null);
   const [open, setOpen] = useState(false);
+  const [invalidEmail, setInvalidEmail] = useState(false);
   const [teacherId, setTeacherId] = useState("");
   const token = localStorage.getItem("userToken");
 
@@ -64,9 +65,10 @@ function TeachersProvider({ children }) {
         setTeachers([...teachers, data]);
         setOpen(true);
         getTeachers();
+        setInvalidEmail(false)
       }
     } catch (error) {
-      if (error.response && error.response.status === 500) console.log(error.response);
+      if (error.response && error.response.status === 500) setInvalidEmail(true);
     }
   };
 
@@ -123,6 +125,7 @@ function TeachersProvider({ children }) {
         teacher,
         updateId,
         addTeacher,
+        invalidEmail,
         deleteTeacher,
         updateTeacher,
         open,

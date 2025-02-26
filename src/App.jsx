@@ -23,7 +23,14 @@ function App() {
 
         {/* Auth routes */}
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route
+          path="/register"
+          element={
+            <ProtectedRoute>
+              <Register />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Faculty routes */}
         <Route

@@ -24,7 +24,7 @@ const AddTeacher = () => {
       schedules: [{ day: "", timeSlots: [{ start: "", end: "" }] }],
     },
   });
-  const { addTeacher, open, setOpen, close } = useContext(teacherContext);
+  const { addTeacher, invalidEmail, open, setOpen, close } = useContext(teacherContext);
   const { courses } = useContext(courseContext);
   const { departments } = useContext(departmentContext);
 
@@ -89,6 +89,9 @@ const AddTeacher = () => {
                 />
               </div>
               <p className="text-sm text-red-600">{errors.email?.message}</p>
+              {invalidEmail && (
+                <p className="text-sm text-red-600">Email already exist!</p>
+              )}
             </div>
 
             <div>
@@ -151,8 +154,8 @@ const AddTeacher = () => {
                   {...register("qualification")}
                   className=" block w-full rounded-md bg-white px-4 py-3 text-base text-slate-600 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline  focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
                 >
-                  <option value="bachelor">Bachelor</option>
-                  <option value="MSc">Master</option>
+                  <option value="Bachelor">Bachelor</option>
+                  <option value="MSC">Master</option>
                   <option value="PhD">PhD</option>
                 </select>
                 <p className="text-sm text-red-600">
