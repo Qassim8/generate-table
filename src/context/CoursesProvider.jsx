@@ -29,8 +29,8 @@ function CoursesProvider({ children }) {
   };
 
   useEffect(() => {
-    getCourses();
-  }, []);
+    if (token) getCourses();
+  }, [token]);
 
   const getCourseInfo = async (id) => {
     try {

@@ -27,8 +27,8 @@ function DepartmentProvider({ children }) {
   };
 
   useEffect(() => {
-    getDepartments();
-  }, []);
+    if (token) getDepartments();
+  }, [token]);
 
   const getDepartmentInfo = async (id) => {
     try {

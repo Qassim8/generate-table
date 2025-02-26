@@ -28,8 +28,8 @@ function ClassroomProvider({ children }) {
   };
 
   useEffect(() => {
-    getRooms();
-  }, []);
+    if (token) getRooms();
+  }, [token]);
 
   useEffect(() => {
     const getRoomInfo = async () => {

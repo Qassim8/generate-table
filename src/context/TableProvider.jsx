@@ -21,8 +21,8 @@ function TableProvider({ children }) {
   };
 
   useEffect(() => {
-    getTableData();
-  }, []);
+    if (token) getTableData();
+  }, [token]);
 
   const genarateTable = async (data) => {
     try {

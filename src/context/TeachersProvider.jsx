@@ -29,8 +29,8 @@ function TeachersProvider({ children }) {
   };
 
   useEffect(() => {
-    getTeachers();
-  }, []);
+    if(token) getTeachers();
+  }, [token]);
 
   const updateId = (id) => setTeacherId(id);
 
