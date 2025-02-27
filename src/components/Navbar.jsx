@@ -110,10 +110,10 @@ function Navbar({ pageName, children }) {
           <DisclosurePanel className="sm:hidden">
             <div className="space-y-1 pb-3 pt-2">
               {navigation.map((item) => (
-                <DisclosureButton
+                <Link
                   key={item.name}
                   as="a"
-                  href={item.href}
+                  to={item.href}
                   aria-current={item.current ? "page" : undefined}
                   className={classNames(
                     item.href === location.pathname
@@ -123,7 +123,7 @@ function Navbar({ pageName, children }) {
                   )}
                 >
                   {item.name}
-                </DisclosureButton>
+                </Link>
               ))}
             </div>
             <div className="border-t border-gray-200 pb-3 pt-4">
