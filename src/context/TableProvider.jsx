@@ -78,8 +78,9 @@ function TableProvider({ children }) {
         `https://autogenerate-timetable-api.vercel.app/api/timetable/delete-timetable`
       );
       if (response.status === 200) {
-        setTableData([]);
         getTableData();
+        setTableData([]);
+        window.location.reload()
       }
     } catch (error) {
       console.log("Error clearing cart:", error);
