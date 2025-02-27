@@ -128,7 +128,7 @@ function Navbar({ pageName, children }) {
             </div>
             <div className="border-t border-gray-200 pb-3 pt-4">
               {token ? (
-                <div className="flex items-center gap-3">
+                <div className="px-3 flex items-center gap-3">
                   <Link
                     to="/register"
                     className="flex justify-center items-center gap-2 text-white bg-indigo-500 py-2 px-5 rounded-lg cursor-pointer duration-300 hover:bg-indigo-600"
@@ -147,7 +147,7 @@ function Navbar({ pageName, children }) {
               ) : (
                 <Link
                   to="/login"
-                  className="flex justify-center items-center gap-2 text-white bg-indigo-500 py-2 px-5 rounded-lg cursor-pointer duration-300 hover:bg-indigo-600"
+                  className="mx-3 flex justify-center items-center gap-2 text-white bg-indigo-500 py-2 px-5 rounded-lg cursor-pointer duration-300 hover:bg-indigo-600"
                 >
                   <span>Login</span>
                   <SignIn className="text-white text-lg" />
