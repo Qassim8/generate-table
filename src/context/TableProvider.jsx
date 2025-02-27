@@ -5,6 +5,7 @@ export const tableContext = createContext({});
 function TableProvider({ children }) {
   const [tableData, setTableData] = useState([]);
   const token = localStorage.getItem("userToken");
+  const [empty, setEmpty] = useState(false);
 
   const getTableData = async () => {
     try {
@@ -37,6 +38,12 @@ function TableProvider({ children }) {
       );
       if (response.status === 201) {
         getTableData();
+        console.log(response.data.timetable.length);
+        if (response.data.timetable.length === 0) {
+          setEmpty(true);
+        } else {
+          setEmpty(false);
+        }
       }
     } catch (err) {
       console.log(err);
@@ -57,8 +64,8 @@ function TableProvider({ children }) {
       if (response.status === 201) {
         setTableData(
           tableData.map((field) => (field.id === data.id ? data : field))
-          );
-          getTableData();
+        );
+        getTableData();
       }
     } catch (err) {
       console.log(err);
@@ -71,8 +78,8 @@ function TableProvider({ children }) {
         `https://autogenerate-timetable-api.vercel.app/api/timetable/delete-timetable`
       );
       if (response.status === 200) {
-          setTableData([]);
-          getTableData();
+        setTableData([]);
+        getTableData();
       }
     } catch (error) {
       console.log("Error clearing cart:", error);
@@ -81,7 +88,7 @@ function TableProvider({ children }) {
 
   return (
     <tableContext.Provider
-      value={{ tableData, genarateTable, updateTable, clearTable }}
+      value={{ tableData, genarateTable, updateTable, clearTable, empty, setEmpty }}
     >
       {children}
     </tableContext.Provider>
