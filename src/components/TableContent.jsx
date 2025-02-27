@@ -4,7 +4,7 @@ import { tableContext } from "../context/TableProvider";
 
 function TableContent() {
   const role = localStorage.getItem("userRole");
-  const { tableData, updateTable } = useContext(tableContext);
+  const { tableData, updateTable, rejectTable } = useContext(tableContext);
   const [columns, setColumns] = useState([]); // 🔄 إنشاء الأعمدة ديناميكيًا
   const [formattedData, setFormattedData] = useState([]);
 
@@ -42,21 +42,33 @@ function TableContent() {
 
           return sessions.length > 0
             ? sessions.map((session) =>
-                session.status === "pending" && role === "admin" ? (
+                role === "admin" ? (
                   <div key={session._id} className="text-sm py-3">
                     <span className="font-semibold text-indigo-600">
                       {session.course}
                     </span>
                     <div className="text-gray-500">Dr. {session.teacher}</div>
                     <div className="text-gray-400">{session.classroom}</div>
-                    <button
-                      className="my-2 p-2 text-[12px] bg-emerald-500 text-white rounded-sm cursor-pointer"
-                      onClick={() => updateTable(session)}
-                    >
-                      approve
-                    </button>
+                    <div className="flex items-center gap-3">
+                      {session.status === "approved" ? (
+                        ""
+                      ) : (
+                        <button
+                          className="my-2 p-2 text-[12px] bg-emerald-500 text-white rounded-sm cursor-pointer"
+                          onClick={() => updateTable(session)}
+                        >
+                          approve
+                        </button>
+                      )}
+                      <button
+                        className="my-2 p-2 text-[12px] bg-red-500 text-white rounded-sm cursor-pointer"
+                        onClick={() => rejectTable(session)}
+                      >
+                        reject
+                      </button>
+                    </div>
                   </div>
-                ) : session.status === "approved" ? (
+                ) : role !== "admin" && session.status === "approved" ? (
                   <div key={session._id} className="text-sm py-3">
                     <span className="font-semibold text-indigo-600">
                       {session.course}
@@ -65,13 +77,7 @@ function TableContent() {
                     <div className="text-gray-400">{session.classroom}</div>
                   </div>
                 ) : (
-                  <div key={session._id} className="text-sm py-3">
-                    <span className="font-semibold text-indigo-600">
-                      {session.course}
-                    </span>
-                    <div className="text-gray-500">Dr. {session.teacher}</div>
-                    <div className="text-gray-400">{session.classroom}</div>
-                  </div>
+                  ""
                 )
               )
             : "---"; // ✅ إذا لم يكن هناك محاضرة في هذا الوقت
@@ -80,7 +86,7 @@ function TableContent() {
     ];
 
     setColumns(dynamicColumns);
-  }, [tableData, formattedData, updateTable, role]);
+  }, [tableData, formattedData, updateTable, rejectTable, role]);
 
   const customStyles = {
     table: {

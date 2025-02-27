@@ -61,9 +61,9 @@ function TableProvider({ children }) {
           },
         }
       );
-      if (response.status === 201) {
+      if (response.status === 200) {
         setTableData(
-          tableData.map((field) => (field.id === data.id ? data : field))
+          tableData.map((field) => (field.id === data.id ? { ...data } : field))
         );
         getTableData();
       }
@@ -71,6 +71,32 @@ function TableProvider({ children }) {
       console.log(err);
     }
   };
+
+    const rejectTable = async (data) => {
+      try {
+        const response = await axios.put(
+          `https://autogenerate-timetable-api.vercel.app/api/timetable/update-timetable-status/${data._id}`,
+          { ...data, status: "rejected" },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.status === 200) {
+          setTableData(
+            tableData.map((field) =>
+              field.id === data.id ? { ...data } : field
+            )
+          );
+          getTableData();
+          
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
 
   const clearTable = async () => {
     try {
@@ -89,7 +115,7 @@ function TableProvider({ children }) {
 
   return (
     <tableContext.Provider
-      value={{ tableData, genarateTable, updateTable, clearTable, empty, setEmpty }}
+      value={{ tableData, genarateTable, updateTable, rejectTable, clearTable, empty, setEmpty }}
     >
       {children}
     </tableContext.Provider>
