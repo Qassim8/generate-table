@@ -38,48 +38,48 @@ function TableContent() {
               `${session.time.start} - ${session.time.end}` === time
           );
 
-          sessions.map((session) => console.log(session.status));
+          sessions.map((session) => console.log(session.status === "approved"));
 
           return sessions.length > 0
             ? sessions.map((session) =>
-                role === "admin" ? (
-                  <div key={session._id} className="text-sm py-3">
-                    <span className="font-semibold text-indigo-600">
-                      {session.course}
-                    </span>
-                    <div className="text-gray-500">Dr. {session.teacher}</div>
-                    <div className="text-gray-400">{session.classroom}</div>
-                    <div className="flex items-center gap-3">
-                      {session.status === "approved" ? (
-                        ""
-                      ) : (
-                        <button
-                          className="my-2 p-2 text-[12px] bg-emerald-500 text-white rounded-sm cursor-pointer"
-                          onClick={() => updateTable(session)}
-                        >
-                          approve
-                        </button>
-                      )}
+              role === "admin" ? (
+                <div key={session._id} className="text-sm py-3">
+                  <span className="font-semibold text-indigo-600">
+                    {session.course}
+                  </span>
+                  <div className="text-gray-500">Dr. {session.teacher}</div>
+                  <div className="text-gray-400">{session.classroom}</div>
+                  <div className="flex items-center gap-3">
+                    {session.status === "approved" ? (
+                      ""
+                    ) : (
                       <button
-                        className="my-2 p-2 text-[12px] bg-red-500 text-white rounded-sm cursor-pointer"
-                        onClick={() => rejectTable(session)}
+                        className="my-2 p-2 text-[12px] bg-emerald-500 text-white rounded-sm cursor-pointer"
+                        onClick={() => updateTable(session)}
                       >
-                        reject
+                        approve
                       </button>
-                    </div>
+                    )}
+                    <button
+                      className="my-2 p-2 text-[12px] bg-red-500 text-white rounded-sm cursor-pointer"
+                      onClick={() => rejectTable(session)}
+                    >
+                      reject
+                    </button>
                   </div>
-                ) : role !== "admin" && session.status === "approved" ? (
-                  <div key={session._id} className="text-sm py-3">
-                    <span className="font-semibold text-indigo-600">
-                      {session.course}
-                    </span>
-                    <div className="text-gray-500">Dr. {session.teacher}</div>
-                    <div className="text-gray-400">{session.classroom}</div>
-                  </div>
-                ) : (
-                  ""
-                )
+                </div>
+              ) : role !== "admin" && session.status === "approved" ? (
+                <div key={session._id} className="text-sm py-3">
+                  <span className="font-semibold text-indigo-600">
+                    {session.course}
+                  </span>
+                  <div className="text-gray-500">Dr. {session.teacher}</div>
+                  <div className="text-gray-400">{session.classroom}</div>
+                </div>
+              ) : (
+                ""
               )
+            )
             : "---"; // ✅ إذا لم يكن هناك محاضرة في هذا الوقت
         },
       })),

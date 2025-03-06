@@ -22,8 +22,8 @@ function TableProvider({ children }) {
   };
 
   useEffect(() => {
-    if (token) getTableData();
-  }, [token]);
+    getTableData();
+  }, []);
 
   const genarateTable = async (data) => {
     try {
@@ -72,30 +72,30 @@ function TableProvider({ children }) {
     }
   };
 
-    const rejectTable = async (data) => {
-      try {
-        const response = await axios.put(
-          `https://autogenerate-timetable-api.vercel.app/api/timetable/update-timetable-status/${data._id}`,
-          { ...data, status: "rejected" },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        if (response.status === 200) {
-          setTableData(
-            tableData.map((field) =>
-              field.id === data.id ? { ...data } : field
-            )
-          );
-          getTableData();
-          
+  const rejectTable = async (data) => {
+    try {
+      const response = await axios.put(
+        `https://autogenerate-timetable-api.vercel.app/api/timetable/update-timetable-status/${data._id}`,
+        { ...data, status: "rejected" },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      } catch (err) {
-        console.log(err);
+      );
+      if (response.status === 200) {
+        setTableData(
+          tableData.map((field) =>
+            field.id === data.id ? { ...data } : field
+          )
+        );
+        getTableData();
+
       }
-    };
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
 
   const clearTable = async () => {
