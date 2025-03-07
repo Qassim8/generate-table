@@ -5,22 +5,33 @@ import { tableContext } from "../context/TableProvider";
 function TableContent() {
   const role = localStorage.getItem("userRole");
   const { tableData, updateTable, rejectTable } = useContext(tableContext);
-  const [columns, setColumns] = useState([]); // 🔄 إنشاء الأعمدة ديناميكيًا
+  const [columns, setColumns] = useState([]); // Columns will be set dynamically
   const [formattedData, setFormattedData] = useState([]);
 
-  useEffect(() => {
-    if (tableData.length === 0) return; // ✅ تجنب الأخطاء إذا لم تكن هناك بيانات بعد
+  // Define days of the week to ensure all are present
+  const daysOfWeek = [
+    "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+  ];
 
-    // ✅ استخراج جميع الأوقات الفريدة (بدون تكرار)
+  useEffect(() => {
+    if (tableData.length === 0) return; // Prevent errors if no data
+
+    // Extract unique times (without duplicates) and sort them
     const uniqueTimes = [
       ...new Set(
         tableData.map((item) => `${item.time.start} - ${item.time.end}`)
       ),
-    ].sort(); // ✅ ترتيب الأوقات تصاعديًا
+    ].sort();
 
-    setFormattedData(tableData); // ✅ تخزين البيانات كما هي
+    // Ensure formattedData contains all days of the week
+    const allDaysData = daysOfWeek.map((day) => ({ day }));
 
-    // ✅ إعداد الأعمدة بناءً على الأوقات المتاحة
+    // Populate formattedData with all days, regardless of the tableData
+    setFormattedData(allDaysData);
+
+    console.log("🚀 ~ TableContent ~ formattedData:", formattedData);
+
+    // Setup dynamic columns based on available times
     const dynamicColumns = [
       {
         name: "Day",
@@ -31,14 +42,12 @@ function TableContent() {
       ...uniqueTimes.map((time) => ({
         name: time,
         selector: (row) => {
-          // ✅ البحث عن المحاضرات المطابقة لهذا الوقت
-          const sessions = formattedData.filter(
+          // Filter sessions for the current day and time
+          const sessions = tableData.filter(
             (session) =>
               session.day === row.day &&
               `${session.time.start} - ${session.time.end}` === time
           );
-
-          sessions.map((session) => console.log(session.status === "approved"));
 
           return sessions.length > 0
             ? sessions.map((session) =>
@@ -80,7 +89,7 @@ function TableContent() {
                 ""
               )
             )
-            : "---"; // ✅ إذا لم يكن هناك محاضرة في هذا الوقت
+            : "---"; // Display "---" if no session is found for that time
         },
       })),
     ];
@@ -109,10 +118,11 @@ function TableContent() {
     cells: {
       style: {
         marginInline: "auto",
-        borderRight: "1px solid #ddd", // 🏛️ إضافة خط بين الأعمدة
+        borderRight: "1px solid #ddd", // Add line between columns
       },
     },
   };
+
   return (
     <div>
       <DataTable

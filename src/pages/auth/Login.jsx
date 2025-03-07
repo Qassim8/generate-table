@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../../utils/validationSchema";
 import axios from "axios";
-import { Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
 const Login = () => {
   const {
