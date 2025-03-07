@@ -51,14 +51,14 @@ function App() {
         />
 
         {/* Teacher routes */}
-        <Route
+        {/* <Route
           path="/teacher/new"
           element={
             <ProtectedRoute>
               <AddTeacher />
             </ProtectedRoute>
           }
-        />
+        /> */}
         <Route
           path="/teacher/list"
           element={
