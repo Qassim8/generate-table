@@ -20,6 +20,11 @@ export const registerSchema = yup.object().shape({
     .string()
     .email("Invalid email format")
     .required("Email is required"),
+  phone: yup
+    .string()
+    .min(10, "Phone must be at least 10 numbers")
+    .required("Phone number is required"),
+  address: yup.string().required("Address is required"),
   password: yup
     .string()
     .min(6, "Password must be at least 6 characters")
@@ -28,6 +33,44 @@ export const registerSchema = yup.object().shape({
     .string()
     .oneOf([yup.ref("password"), null], "Passwords must match")
     .required("Confirm Password is required"),
+  role: yup.string().required("Role is required"),
+
+  courseId: yup.string().when("role", {
+    is: "teacher",
+    then: (schema) => schema.required("Course is required"),
+    otherwise: (schema) => schema.nullable().notRequired(),
+  }),
+
+  departmentId: yup.string().when("role", {
+    is: "teacher",
+    then: (schema) => schema.required("Department is required"),
+    otherwise: (schema) => schema.nullable().notRequired(),
+  }),
+
+  qualification: yup.string().when("role", {
+    is: "teacher",
+    then: (schema) => schema.required("Qualification is required"),
+    otherwise: (schema) => schema.nullable().notRequired(),
+  }),
+
+  schedules: yup.array().when("role", {
+    is: "teacher",
+    then: (schema) =>
+      schema
+        .of(
+          yup.object().shape({
+            day: yup.string().required("Day is required"),
+            timeSlots: yup.array().of(
+              yup.object().shape({
+                start: yup.string().required("Start time is required"),
+                end: yup.string().required("End time is required"),
+              })
+            ),
+          })
+        )
+        .min(1, "At least one schedule is required"),
+    otherwise: (schema) => schema.nullable().notRequired(),
+  }),
 });
 
 export const departmentSchema = yup.object({
@@ -38,20 +81,6 @@ export const departmentSchema = yup.object({
 export const teacherSchema = yup.object({
   name: yup.string().required("Name is required"),
   email: yup.string().email("Invalid email").required("Email is required"),
-  courseId: yup.string().required("Course is required"),
-  departmentId: yup.string().required("Department is required"),
-  qualification: yup.string().required("Qualification is required"),
-  schedules: yup.array().of(
-    yup.object().shape({
-      day: yup.string().required("Day is required"),
-      timeSlots: yup.array().of(
-        yup.object().shape({
-          start: yup.string().required("Start hour is required"),
-          end: yup.string().required("End hour is required"),
-        })
-      ),
-    })
-  ),
 });
 
 export const courseSchema = yup.object({

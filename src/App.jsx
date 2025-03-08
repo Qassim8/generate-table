@@ -3,7 +3,6 @@ import { Routes, Route } from "react-router";
 import Login from './pages/auth/Login';
 import Home from './pages/Home';
 import Register from './pages/auth/Register';
-import AddTeacher from './pages/teacher/Add';
 import AddCourse from './pages/course/Add';
 import AddClassroom from './pages/classroom/Add';
 import ClassRoomList from './pages/classroom/List';
@@ -50,15 +49,8 @@ function App() {
           }
         />
 
-        {/* Teacher routes */}
-        {/* <Route
-          path="/teacher/new"
-          element={
-            <ProtectedRoute>
-              <AddTeacher />
-            </ProtectedRoute>
-          }
-        /> */}
+        {/* Teacher route */}
+        
         <Route
           path="/teacher/list"
           element={
