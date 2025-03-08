@@ -20,22 +20,22 @@ const AddClassroom = () => {
     },
   });
 
-  const { addRoom , open, setOpen, close} = useContext(roomsContext);
+  const { addRoom, open, setOpen, close } = useContext(roomsContext);
 
   const onSubmit = (data) => {
-      const trimmedData = {
-        ...data,
-        name: data.name.trim(), 
-        availability: data.availability.map((slot) => ({
-          day: slot.day.trim(), // إزالة الفراغات من اليوم
-          timeSlots: slot.timeSlots.map((time) => ({
-            start: time.start.trim(), // إزالة الفراغات من وقت البداية
-            end: time.end.trim(), // إزالة الفراغات من وقت النهاية
-          })),
+    const trimmedData = {
+      ...data,
+      name: data.name.trim(),
+      availability: data.availability.map((slot) => ({
+        day: slot.day.trim(), // إزالة الفراغات من اليوم
+        timeSlots: slot.timeSlots.map((time) => ({
+          start: time.start.trim(), // إزالة الفراغات من وقت البداية
+          end: time.end.trim(), // إزالة الفراغات من وقت النهاية
         })),
-      };
-        addRoom(trimmedData)
+      })),
     };
+    addRoom(trimmedData);
+  };
 
   return (
     <Navbar pageName="Add Classroom">
@@ -91,16 +91,24 @@ const AddClassroom = () => {
               >
                 Day
               </label>
+
               <div className="mt-2">
-                <input
-                  type="text"
+                <select
                   {...register("availability.[0].day")}
-                  className="block w-full rounded-md bg-white px-4 py-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline  focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
-                />
+                  className=" block w-full rounded-md bg-white px-4 py-3 text-base text-slate-600 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline  focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
+                >
+                  <option value="Sunday">Sunday</option>
+                  <option value="Monday">Monday</option>
+                  <option value="Tuesday">Tuesday</option>
+                  <option value="Wednesday">Wednesday</option>
+                  <option value="Thrusday">Thrusday</option>
+                  <option value="Friday">Friday</option>
+                  <option value="Saturday">Saturday</option>
+                </select>
+                <p className="text-sm text-red-600">
+                  {errors.availability?.[0]?.day.message}
+                </p>
               </div>
-              <p className="text-sm text-red-600">
-                {errors.availability?.[0]?.day.message}
-              </p>
             </div>
             <div>
               <label
@@ -111,7 +119,7 @@ const AddClassroom = () => {
               </label>
               <div className="mt-2">
                 <input
-                  type="text"
+                  type="time"
                   {...register("availability.[0].timeSlots.[0].start")}
                   className="block w-full rounded-md bg-white px-4 py-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline  focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
                 />
@@ -129,7 +137,7 @@ const AddClassroom = () => {
               </label>
               <div className="mt-2">
                 <input
-                  type="text"
+                  type="time"
                   {...register("availability.[0].timeSlots.[0].end")}
                   className="block w-full rounded-md bg-white px-4 py-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline  focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
                 />

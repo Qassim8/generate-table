@@ -189,9 +189,11 @@ const Register = () => {
                             </option>
                           ))}
                         </select>
-                        <p className="text-sm text-red-600">
-                          {errors.courseId?.message}
-                        </p>
+                        {teacher && (
+                          <p className="text-sm text-red-600">
+                            {errors.courseId?.message}
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div>
@@ -212,9 +214,11 @@ const Register = () => {
                             </option>
                           ))}
                         </select>
-                        <p className="text-sm text-red-600">
-                          {errors.departmentId?.message}
-                        </p>
+                        {teacher && (
+                          <p className="text-sm text-red-600">
+                            {errors.departmentId?.message}
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div>
@@ -233,9 +237,11 @@ const Register = () => {
                           <option value="MSC">Master</option>
                           <option value="PhD">PhD</option>
                         </select>
-                        <p className="text-sm text-red-600">
-                          {errors.qualification?.message}
-                        </p>
+                        {teacher && (
+                          <p className="text-sm text-red-600">
+                            {errors.qualification?.message}
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div>
@@ -258,9 +264,11 @@ const Register = () => {
                           <option value="Friday">Friday</option>
                           <option value="Saturday">Saturday</option>
                         </select>
-                        <p className="text-sm text-red-600">
-                          {errors.schedules?.[0]?.day.message}
-                        </p>
+                        {teacher && (
+                          <p className="text-sm text-red-600">
+                            {errors.schedules?.[0]?.day.message}
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div>
@@ -277,9 +285,11 @@ const Register = () => {
                           className="block w-full rounded-md bg-white px-4 py-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline  focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
                         />
                       </div>
-                      <p className="text-sm text-red-600">
-                        {errors.schedules?.[0]?.timeSlots?.[0].start.message}
-                      </p>
+                      {teacher && (
+                        <p className="text-sm text-red-600">
+                          {errors.schedules?.[0]?.timeSlots?.[0].start.message}
+                        </p>
+                      )}
                     </div>
                     <div>
                       <label
@@ -295,9 +305,11 @@ const Register = () => {
                           className="block w-full rounded-md bg-white px-4 py-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline  focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
                         />
                       </div>
-                      <p className="text-sm text-red-600">
-                        {errors.schedules?.[0].timeSlots?.[0].end.message}
-                      </p>
+                      {teacher && (
+                        <p className="text-sm text-red-600">
+                          {errors.schedules?.[0].timeSlots?.[0].end.message}
+                        </p>
+                      )}
                     </div>
                   </>
                 )}
