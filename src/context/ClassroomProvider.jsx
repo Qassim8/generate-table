@@ -104,10 +104,30 @@ function ClassroomProvider({ children }) {
     }
   };
 
+    const addDays = async (data) => {
+      try {
+        const response = await axios.put(
+          `https://autogenerate-timetable-api.vercel.app/api/classroom/${roomId}`,
+          { ...data },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        if (response.status === 200) {
+          setRooms(
+            rooms.map((room) =>
+              room._id === data._id ? { ...data } : room
+            )
+          );
+          getRooms();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     const deleteAllRooms = async () => {
       const deletePromises = rooms.map((room) =>
         axios.delete(
-          `https://autogenerate-timetable-api.vercel.app/api/teacher/${room._id}`,
+          `https://autogenerate-timetable-api.vercel.app/api/classroom/${room._id}`,
           { headers: { Authorization: `Bearer ${token}` } }
         )
       );
@@ -117,7 +137,7 @@ function ClassroomProvider({ children }) {
 
   return (
     <roomsContext.Provider
-      value={{ rooms, room, updateId, addRoom, deleteRoom, updateRoom, open, setOpen, close, deleteAllRooms }}
+      value={{ rooms, room, updateId, addRoom, deleteRoom, updateRoom, addDays,open, setOpen, close, deleteAllRooms }}
     >
       {children}
     </roomsContext.Provider>

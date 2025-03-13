@@ -35,17 +35,27 @@ export const registerSchema = yup.object().shape({
     .required("Confirm Password is required"),
   role: yup.string().required("Role is required"),
 
-  courseId: yup.string().when("role", {
-    is: "teacher",
-    then: (schema) => schema.required("Course is required"),
-    otherwise: (schema) => schema.nullable().notRequired(),
-  }),
+  courseId: yup
+    .array()
+    .transform((value, originalValue) =>
+      typeof originalValue === "string" ? [originalValue] : originalValue
+    )
+    .when("role", {
+      is: "teacher",
+      then: (schema) => schema.min(1, "Course is required"), // تأكد من وجود عنصر واحد على الأقل
+      otherwise: (schema) => schema.nullable().notRequired(),
+    }),
 
-  departmentId: yup.string().when("role", {
-    is: "teacher",
-    then: (schema) => schema.required("Department is required"),
-    otherwise: (schema) => schema.nullable().notRequired(),
-  }),
+  departmentId: yup
+    .array()
+    .transform((value, originalValue) =>
+      typeof originalValue === "string" ? [originalValue] : originalValue
+    )
+    .when("role", {
+      is: "teacher",
+      then: (schema) => schema.min(1, "Department is required"), // تأكد من وجود عنصر واحد على الأقل
+      otherwise: (schema) => schema.nullable().notRequired(),
+    }),
 
   qualification: yup.string().when("role", {
     is: "teacher",
@@ -74,18 +84,15 @@ export const registerSchema = yup.object().shape({
 });
 
 export const departmentSchema = yup.object({
-  name: yup.string().required("Department name is required"),
-  code: yup.string().required("Department code is required"),
+  departmentName: yup.string().required("Department name is required"),
+  batch: yup.string().required("Batch is required"),
 });
 
-export const teacherSchema = yup.object({
-  name: yup.string().required("Name is required"),
-  email: yup.string().email("Invalid email").required("Email is required"),
-});
 
 export const courseSchema = yup.object({
   title: yup.string().required("Course title is required"),
-  code: yup.string().required("Course code is required"),
+  hours: yup.string().required("Course hours is required"),
+  batch: yup.string().required("Course batch is required"),
   departmentId: yup.string().required("Department is required"),
 });
 
@@ -108,16 +115,25 @@ export const classroomSchema = yup.object({
 export const tableSchema = yup.object({
   courseIds: yup
     .array()
+    .transform((value, originalValue) =>
+      typeof originalValue === "string" ? [originalValue] : originalValue
+    )
     .of(yup.string())
     .min(1, "You must select one course at least")
     .required("You must select one course at least"),
   classroomIds: yup
     .array()
+    .transform((value, originalValue) =>
+      typeof originalValue === "string" ? [originalValue] : originalValue
+    )
     .of(yup.string())
     .min(1, "You must select one classroom at least")
     .required("You must select one classroom at least"),
   teacherIds: yup
     .array()
+    .transform((value, originalValue) =>
+      typeof originalValue === "string" ? [originalValue] : originalValue
+    )
     .of(yup.string())
     .min(1, "You must select one teacher at least")
     .required("You must select one teacher at least"),

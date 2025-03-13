@@ -16,8 +16,9 @@ const AddCourse = () => {
     resolver: yupResolver(courseSchema),
     defaultValues: {
       title: "",
-      code: "",
-      departmentId: "",
+      hours: "",
+      batch: "",
+      departmentId: ""
     },
   });
   const { addCourse, open, setOpen, close } = useContext(courseContext);
@@ -63,16 +64,40 @@ const AddCourse = () => {
                 htmlFor="code"
                 className="block text-sm font-medium text-gray-900"
               >
-                Course Code
+                Hours
               </label>
               <div className="mt-2">
                 <input
                   type="text"
-                  {...register("code")}
+                  {...register("hours")}
                   className="block w-full rounded-md bg-white px-4 py-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline  focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
                 />
               </div>
-              <p className="text-sm text-red-600">{errors.code?.message}</p>
+              <p className="text-sm text-red-600">{errors.hours?.message}</p>
+            </div>
+
+            <div>
+              <label
+                htmlFor="code"
+                className="block text-sm font-medium text-gray-900"
+              >
+                Batch
+              </label>
+              <div className="mt-2">
+                <select
+                  {...register("batch")}
+                  className=" block w-full rounded-md bg-white px-4 py-3 text-base text-slate-600 font-semibold outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline  focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
+                >
+                  {departments.map((depart, index) => (
+                    <option key={index} value={depart.batch}>
+                      {depart.batch}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-sm text-red-600">
+                  {errors.batch?.message}
+                </p>
+              </div>
             </div>
 
             <div>
@@ -89,12 +114,12 @@ const AddCourse = () => {
                 >
                   {departments.map((depart) => (
                     <option key={depart._id} value={depart._id}>
-                      {depart.name}
+                      {depart.departmentName}
                     </option>
                   ))}
                 </select>
                 <p className="text-sm text-red-600">
-                  {errors.departmentId?.message}
+                  {errors.departmentName?.message}
                 </p>
               </div>
             </div>

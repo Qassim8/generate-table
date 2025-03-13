@@ -1,16 +1,17 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { registerSchema } from "../../utils/validationSchema";
-import axios from "axios";
 import { useContext, useState } from "react";
 import SuccessModal from "../../components/SuccessModal";
 import { courseContext } from "../../context/CoursesProvider";
 import { departmentContext } from "../../context/DepartmentProvider";
+import { formatTimeTo12Hour } from "../../utils/formatTime";
+import { authContext } from "../../context/AuthProvider";
 
 const Register = () => {
-  const [open, setOpen] = useState(false);
+
   const [teacher, setTeacher] = useState(false);
-  const [exist, setExist] = useState(false);
+  const {signupUser, exist, open, setOpen} = useContext(authContext)
   const { courses } = useContext(courseContext);
   const { departments } = useContext(departmentContext);
   const {
@@ -34,33 +35,7 @@ const Register = () => {
     setValue(fieldName, updatedValues); // تحديث القيم في `react-hook-form`
   };
 
-  const signupUser = async (user) => {
-    try {
-      const response = await axios.post(
-        "https://autogenerate-timetable-api.vercel.app/api/auth/register",
-        {
-          ...user,
-        }
-      );
-      if (response.status === 201) {
-        setOpen(true);
-        setExist(false);
-      }
-    } catch (er) {
-      if (er.response && er.response.status === 400) {
-        setExist(true)
-      }
 
-    }
-  };
-
-  const formatTimeTo12Hour = (time) => {
-    if (!time) return ""; // التحقق من أن القيمة ليست فارغة
-    const [hour, minute] = time.split(":").map(Number);
-    const period = hour >= 12 ? "PM" : "AM";
-    const formattedHour = hour % 12 || 12; // تحويل 00:00 إلى 12:00 AM
-    return `${formattedHour}:${minute.toString().padStart(2, "0")} ${period}`;
-  };
 
   const onSubmit = (data) => {
     const formattedData = {
@@ -74,18 +49,16 @@ const Register = () => {
       })),
     };
 
-    console.log(formattedData)
-    // signupUser(formattedData);
+    signupUser(formattedData);
   };
 
-  const close = () => setOpen(false);
 
   return (
     <>
       <SuccessModal
         open={open}
         setOpen={setOpen}
-        text="User created successful"
+        text="Created successful"
         link="/login"
         page="Login"
         close={close}
@@ -288,9 +261,9 @@ const Register = () => {
                               </span>
                             </div>
                           ))}
-                          {errors.courseIds && (
+                          {errors.courseId && (
                             <p className="text-red-500 text-sm">
-                              {errors.courseIds.message}
+                              {errors.courseId.message}
                             </p>
                           )}
                         </div>
@@ -307,7 +280,7 @@ const Register = () => {
                             <div key={depart._id}>
                               <input
                                 type="checkbox"
-                                name={depart.title}
+                                name={depart.departmentName}
                                 value={depart._id}
                                 {...register("departmentId")}
                                 onChange={(e) =>
@@ -316,13 +289,24 @@ const Register = () => {
                                 className="w-4 h-4 cursor-pointer peer-checked:bg-indigo-600"
                               />
                               <span className="text-gray-700 ms-3">
-                                {depart.name}
+                                {depart.departmentName}
                               </span>
                             </div>
                           ))}
+                          {/* <input
+                            id="departId"
+                            type="radio"
+                            name="departmentId"
+                            value="Computer Engineering"
+                            {...register("departmentId")}
+                            
+                          />
+                          <label htmlFor="admin" className="text-md ms-2 mt-0">
+                            Computer Engineering
+                          </label> */}
                           {errors.departmentId && (
                             <p className="text-red-500 text-sm">
-                              {errors.departmentIds.message}
+                              {errors.departmentId.message}
                             </p>
                           )}
                         </div>

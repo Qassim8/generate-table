@@ -19,7 +19,8 @@ const ClassRoomList = () => {
   const [courseId, setCourseId] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
   const [title, setTitle] = useState("");
-  const [code, setCode] = useState("");
+  const [hours, setHours] = useState("");
+  const [batch, setBatch] = useState("");
   const { courses, course, deleteCourse, updateId, updateCourse, deleteAllCourses } =
     useContext(courseContext);
 
@@ -45,16 +46,29 @@ const ClassRoomList = () => {
       </div>
       <div className="w-full">
         <label htmlFor="email" className="block text-sm text-slate-600">
-          Course Code
+          Course Hours
         </label>
         <div className="mt-2">
           <input
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
+            value={hours}
+            onChange={(e) => setHours(e.target.value)}
             className="block w-full rounded-md bg-white px-4 py-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline  focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
           />
         </div>
-        <p className="text-sm text-red-600">{errors.code?.message}</p>
+        <p className="text-sm text-red-600">{errors.hours?.message}</p>
+      </div>
+      <div className="w-full">
+        <label htmlFor="email" className="block text-sm text-slate-600">
+          Batch
+        </label>
+        <div className="mt-2">
+          <input
+            value={batch}
+            onChange={(e) => setBatch(e.target.value)}
+            className="block w-full rounded-md bg-white px-4 py-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline  focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
+          />
+        </div>
+        <p className="text-sm text-red-600">{errors.batch?.message}</p>
       </div>
     </>
   );
@@ -62,7 +76,8 @@ const ClassRoomList = () => {
   useEffect(() => {
     if (course) {
       setTitle(course.title);
-      setCode(course.code);
+      setHours(course.hours);
+      setBatch(course.batch);
     }
   }, [course]);
 
@@ -89,7 +104,8 @@ const ClassRoomList = () => {
     updateCourse({
       _id: courseId,
       title,
-      code,
+      hours,
+      batch,
     });
     setShow(false); // Close the modal
   };
@@ -126,8 +142,13 @@ const ClassRoomList = () => {
       sortable: true,
     },
     {
-      name: "Code",
-      selector: (row) => row.code,
+      name: "Hours",
+      selector: (row) => row.hours,
+      sortable: true,
+    },
+    {
+      name: "Batch",
+      selector: (row) => row.batch,
     },
     {
       name: "Action",

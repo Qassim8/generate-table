@@ -8,27 +8,40 @@ import { teacherContext } from "../../context/TeachersProvider";
 import UpdateModal from "../../components/UpdateModal";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { teacherSchema } from "../../utils/validationSchema";
 import DeleteAllButton from "../../components/DeleteAllButton";
 import DeleteAllModal from "../../components/DeleteAllModal";
+import AddDays from "../../components/AddDays";
+import { formatTimeTo12Hour } from "../../utils/formatTime";
+import { registerSchema } from "../../utils/validationSchema";
 
 const TeachersList = () => {
   const [open, setOpen] = useState(false);
   const [show, setShow] = useState(false);
   const [appear, setAppear] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [teachId, setTeachId] = useState(null);
-  const { teachers, teacher, updateId, updateTeacher, deleteTeacher, deleteAllTeacher } =
-    useContext(teacherContext);
-  const [name, setName] = useState("");
+  const {
+    teachers,
+    teacher,
+    updateId,
+    updateTeacher,
+    addDays,
+    deleteTeacher,
+    deleteAllTeacher,
+  } = useContext(teacherContext);
+  const [username, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [day, setDay] = useState("");
-  const [start, setStart] = useState("");
-  const [end, setEnd] = useState("");
+  const [newDay, setNewDay] = useState("");
+  const [newStart, setNewStart] = useState("");
+  const [newEnd, setNewEnd] = useState("");
+
+  const teacherRole = teachers.filter((teacher) => teacher.role === "teacher");
+
 
   const {
     formState: { errors },
-  } = useForm({ resolver: yupResolver(teacherSchema) });
+  } = useForm({ resolver: yupResolver(registerSchema) });
 
   const formStructure = (
     <>
@@ -39,7 +52,7 @@ const TeachersList = () => {
         <div className="mt-2">
           <input
             type="text"
-            value={name}
+            value={username}
             onChange={(e) => setName(e.target.value)}
             className="block w-full rounded-md bg-white px-4 py-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline  focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
           />
@@ -59,17 +72,32 @@ const TeachersList = () => {
         </div>
         <p className="text-sm text-red-600">{errors.email?.message}</p>
       </div>
+    </>
+  );
+
+  const form = (
+    <>
       <div className="w-full">
         <label htmlFor="subject" className="block text-sm text-slate-600">
           Day
         </label>
         <div className="mt-2">
-          <input
-            type="text"
-            value={day}
-            onChange={(e) => setDay(e.target.value)}
-            className="block w-full rounded-md bg-white px-4 py-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline  focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
-          />
+          <select
+            value={newDay}
+            onChange={(e) => setNewDay(e.target.value)}
+            className=" block w-full rounded-md bg-white px-4 py-3 text-base text-slate-600 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline  focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
+          >
+            <option value="Sunday">Sunday</option>
+            <option value="Monday">Monday</option>
+            <option value="Tuesday">Tuesday</option>
+            <option value="Wednesday">Wednesday</option>
+            <option value="Thrusday">Thrusday</option>
+            <option value="Friday">Friday</option>
+            <option value="Saturday">Saturday</option>
+          </select>
+          <p className="text-sm text-red-600">
+            {errors.availability?.[0]?.day.message}
+          </p>
         </div>
         <p className="text-sm text-red-600">
           {errors.schedules?.[0]?.day.message}
@@ -81,9 +109,9 @@ const TeachersList = () => {
         </label>
         <div className="mt-2">
           <input
-            type="text"
-            value={start}
-            onChange={(e) => setStart(e.target.value)}
+            type="time"
+            value={newStart}
+            onChange={(e) => setNewStart(e.target.value)}
             className="block w-full rounded-md bg-white px-4 py-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline  focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
           />
         </div>
@@ -97,9 +125,9 @@ const TeachersList = () => {
         </label>
         <div className="mt-2">
           <input
-            type="text"
-            value={end}
-            onChange={(e) => setEnd(e.target.value)}
+            type="time"
+            value={newEnd}
+            onChange={(e) => setNewEnd(e.target.value)}
             className="block w-full rounded-md bg-white px-4 py-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline  focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
           />
         </div>
@@ -119,16 +147,18 @@ const TeachersList = () => {
 
   useEffect(() => {
     if (teacher) {
-      setName(teacher.name);
+      setName(teacher.username);
       setEmail(teacher.email);
-      setDay(teacher.schedules[0].day);
-      setStart(teacher.schedules[0].timeSlots[0].start);
-      setEnd(teacher.schedules[0].timeSlots[0].end);
     }
   }, [teacher]);
 
   const handleEdit = (id) => {
     setShow(true);
+    setTeachId(id);
+  };
+
+  const handleView = (id) => {
+    setVisible(true);
     setTeachId(id);
   };
 
@@ -141,12 +171,31 @@ const TeachersList = () => {
   // Confirm Edit action
   const ConfirmEdit = () => {
     updateTeacher({
-      name,
+      username,
       email,
-      schedules: { day, timeSlots: { start, end } },
     });
     setShow(false); // Close the modal
   };
+
+  const ConfirmAddDay = () => {
+  addDays({
+    ...teacher,
+    schedules: [
+      ...(teacher.schedules || []), 
+      {
+        day: newDay,
+        timeSlots: [
+          {
+            start: formatTimeTo12Hour(newStart),
+            end: formatTimeTo12Hour(newEnd),
+          },
+        ],
+      },
+    ],
+  });
+    setVisible(false)
+};
+
 
   // Confirm delete action
   const ConfirmDelete = () => {
@@ -159,6 +208,10 @@ const TeachersList = () => {
   // Cancel edit action
   const cancelEdit = () => {
     setShow(false);
+  };
+
+  const cancelDay = () => {
+    setVisible(false);
   };
 
   // Cancel delete action
@@ -175,7 +228,7 @@ const TeachersList = () => {
     },
     {
       name: "Name",
-      selector: (row) => row.name,
+      selector: (row) => row.username,
       sortable: true,
     },
     {
@@ -183,22 +236,34 @@ const TeachersList = () => {
       selector: (row) => row.email,
     },
     {
-      name: "Works Day",
-      selector: (row) => row.schedules?.[0].day,
+      name: "Worktimes",
+      selector: (row) => {
+        const day = row.schedules;
+        return day.map((day) => (
+          <div className="py-2" key={day._id}>
+            <p className="my-1">{day.day}</p>
+            {day.timeSlots.map((time) => (
+              <div key={time._id}>
+                <span>{time.start}</span>
+                {` - `}
+                <span>{time.end}</span>
+              </div>
+            ))}
+          </div>
+        ));
+      },
       sortable: true,
-    },
-    {
-      name: "Start Time",
-      selector: (row) => row.schedules?.[0].timeSlots?.[0].start,
-    },
-    {
-      name: "End Time",
-      selector: (row) => row.schedules?.[0].timeSlots?.[0].end,
     },
     {
       name: "Action",
       cell: (row) => (
         <div className="flex space-x-2">
+          <button
+            onClick={() => handleView(row._id)}
+            className="text-white bg-emerald-500 py-1 px-2 rounded-sm hover:bg-emerald-700 hover:cursor-pointer"
+          >
+            add time
+          </button>
           <button
             onClick={() => handleEdit(row._id)}
             className="text-blue-500 hover:text-blue-700 hover:cursor-pointer"
@@ -222,7 +287,7 @@ const TeachersList = () => {
   const deleteAll = () => {
     deleteAllTeacher();
     setAppear(false);
-  }
+  };
 
   return (
     <Navbar pageName="Teachers List">
@@ -233,6 +298,14 @@ const TeachersList = () => {
         cancelUpdate={cancelEdit}
         formStructure={formStructure}
         updateData={ConfirmEdit}
+      />
+      <AddDays
+        open={visible}
+        setOpen={setVisible}
+        page="Add New day"
+        cancelUpdate={cancelDay}
+        formStructure={form}
+        updateData={ConfirmAddDay}
       />
       <DeleteModal
         open={open}
@@ -253,11 +326,11 @@ const TeachersList = () => {
       <Table
         title="Teachers List"
         columns={columns}
-        data={teachers}
+        data={teacherRole}
         selectableRows
       />
       <div className="flex justify-between items-center">
-        <AddNewButton link="/teacher/new" page="Teacher" />
+        <AddNewButton link="/register" page="Teacher" />
         <DeleteAllButton page="Teacher" open={showDelete} />
       </div>
     </Navbar>

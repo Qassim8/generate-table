@@ -14,8 +14,8 @@ const AddDepartment = () => {
     } = useForm({
       resolver: yupResolver(departmentSchema),
       defaultValues: {
-        departmentName: "",
-        departmentCode: "",
+        departmentName: "Computer Engineering",
+        batch: "",
       },
     });
 
@@ -27,13 +27,13 @@ const AddDepartment = () => {
     };
 
     return (
-      <Navbar pageName="Add department">
+      <Navbar pageName="Add Batch">
         <SuccessModal
           open={open}
           setOpen={setOpen}
-          text="Department added successful"
+          text="Batch added successful"
           link="/department/list"
-          page="Show Departments"
+          page="Show Batchs"
           close={close}
         />
         <div className="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
@@ -49,9 +49,11 @@ const AddDepartment = () => {
                 <div className="mt-2">
                   <input
                     type="text"
-                    {...register("name")}
+                    {...register("departmentName")}
+                    value="Computer Engineering"
                     onBlur={(e) => (e.target.value = e.target.value.trim())}
-                    className="block w-full rounded-md bg-white px-4 py-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline  focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                    readOnly
+                    className="block w-full rounded-md bg-slate-200 px-4 py-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline  focus:-outline-offset-2 sm:text-sm/6"
                   />
                 </div>
                 <p className="text-sm/6 text-red-600">
@@ -61,21 +63,21 @@ const AddDepartment = () => {
 
               <div>
                 <label
-                  htmlFor="departmentCode"
+                  htmlFor="batch"
                   className="block text-sm/6 font-medium text-gray-900"
                 >
-                  Department Code
+                  Batch
                 </label>
                 <div className="mt-2">
                   <input
-                    type="text"
-                    {...register("code")}
+                    type="number"
+                    {...register("batch")}
                     onBlur={(e) => (e.target.value = e.target.value.trim())}
                     className="block w-full rounded-md bg-white px-4 py-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline  focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                   />
                 </div>
                 <p className="text-sm/6 text-red-600">
-                  {errors.departmentCode?.message}
+                  {errors.batch?.message}
                 </p>
               </div>
             </div>
@@ -85,7 +87,7 @@ const AddDepartment = () => {
                 type="submit"
                 className="flex justify-center rounded-md bg-indigo-600 px-4 py-3 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Add department
+                Add Batch
               </button>
             </div>
           </form>

@@ -13,7 +13,7 @@ function TableList() {
     <Navbar pageName="Generate Table">
       <TableModal />
       <TableOptions />
-      <div className=" my-10">
+      <div className="my-10">
         <h2 className="text-3xl font-bold tracking-tight text-gray-900 pb-5">
           Lectures table
         </h2>
@@ -22,7 +22,6 @@ function TableList() {
           onClick={clearTable}
           className="flex justify-center items-center gap-2 my-5 py-2 px-6 bg-red-500 text-white rounded-md cursor-pointer"
         >
-          {" "}
           <Trash />
           <span>Clear Table</span>
         </button>

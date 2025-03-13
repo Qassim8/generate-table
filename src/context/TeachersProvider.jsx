@@ -15,7 +15,7 @@ function TeachersProvider({ children }) {
   const getTeachers = async () => {
     try {
       const response = await axios.get(
-        "https://autogenerate-timetable-api.vercel.app/api/teacher",
+        "https://autogenerate-timetable-api.vercel.app/api/auth/",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -38,7 +38,7 @@ function TeachersProvider({ children }) {
     const getTeacherInfo = async () => {
       try {
         const response = await axios.get(
-          `https://autogenerate-timetable-api.vercel.app/api/teacher/${teacherId}`,
+          `https://autogenerate-timetable-api.vercel.app/api/auth/${teacherId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -57,7 +57,7 @@ function TeachersProvider({ children }) {
   const addTeacher = async (data) => {
     try {
       const response = await axios.post(
-        "https://autogenerate-timetable-api.vercel.app/api/teacher",
+        "https://autogenerate-timetable-api.vercel.app/api/auth/",
         { ...data },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -75,7 +75,7 @@ function TeachersProvider({ children }) {
   const deleteTeacher = async (id) => {
     try {
       const response = await axios.delete(
-        `https://autogenerate-timetable-api.vercel.app/api/teacher/${id}`,
+        `https://autogenerate-timetable-api.vercel.app/api/auth/${id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       if (response.status === 200) {
@@ -90,7 +90,27 @@ function TeachersProvider({ children }) {
   const updateTeacher = async (data) => {
     try {
       const response = await axios.put(
-        `https://autogenerate-timetable-api.vercel.app/api/teacher/${teacherId}`,
+        `https://autogenerate-timetable-api.vercel.app/api/auth/${teacherId}`,
+        { ...data },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (response.status === 200) {
+        setTeachers(
+          teachers.map((teacher) =>
+            teacher._id === data._id ? { ...data } : teacher
+          )
+        );
+        getTeachers();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const addDays = async (data) => {
+    try {
+      const response = await axios.put(
+        `https://autogenerate-timetable-api.vercel.app/api/auth/${teacherId}`,
         { ...data },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -110,7 +130,7 @@ function TeachersProvider({ children }) {
   const deleteAllTeacher = async () => {
     const deletePromises = teachers.map((teacher) =>
       axios.delete(
-        `https://autogenerate-timetable-api.vercel.app/api/teacher/${teacher._id}`,
+        `https://autogenerate-timetable-api.vercel.app/api/auth/${teacher._id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       )
     );
@@ -128,6 +148,7 @@ function TeachersProvider({ children }) {
         invalidEmail,
         deleteTeacher,
         updateTeacher,
+        addDays,
         open,
         setOpen,
         close,

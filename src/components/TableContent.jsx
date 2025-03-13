@@ -29,7 +29,6 @@ function TableContent() {
     // Populate formattedData with all days, regardless of the tableData
     setFormattedData(allDaysData);
 
-    console.log("🚀 ~ TableContent ~ formattedData:", formattedData);
 
     // Setup dynamic columns based on available times
     const dynamicColumns = [
@@ -95,7 +94,7 @@ function TableContent() {
     ];
 
     setColumns(dynamicColumns);
-  }, [tableData, formattedData, updateTable, rejectTable, role]);
+  }, [tableData, updateTable, rejectTable, role]);
 
   const customStyles = {
     table: {

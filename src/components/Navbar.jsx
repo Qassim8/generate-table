@@ -14,7 +14,7 @@ const navigation = [
   { name: "Teachers", href: "/teacher/list", current: false },
   { name: "Classrooms", href: "/classroom/list", current: false },
   { name: "Courses", href: "/course/list", current: false },
-  { name: "Departments", href: "/department/list", current: false },
+  { name: "Batchs", href: "/department/list", current: false },
   { name: "Table", href: "/table", current: false },
 ];
 

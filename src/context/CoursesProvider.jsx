@@ -65,8 +65,8 @@ function CoursesProvider({ children }) {
       );
       if (response.status === 201) {
         setCourses([...courses, data]);
-        getCourses()
-        setOpen(true)
+        getCourses();
+        setOpen(true);
       }
     } catch (error) {
       console.log(error);
@@ -109,16 +109,16 @@ function CoursesProvider({ children }) {
     }
   };
 
-    const deleteAllCourses = async () => {
-      const deletePromises = courses.map((course) =>
-        axios.delete(
-          `https://autogenerate-timetable-api.vercel.app/api/teacher/${course._id}`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        )
-      );
-      await Promise.all(deletePromises);
-      setCourses([]);
-    };
+  const deleteAllCourses = async () => {
+    const deletePromises = courses.map((course) =>
+      axios.delete(
+        `https://autogenerate-timetable-api.vercel.app/api/course/${course._id}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+    );
+    await Promise.all(deletePromises);
+    setCourses([]);
+  };
 
   return (
     <courseContext.Provider
@@ -132,7 +132,7 @@ function CoursesProvider({ children }) {
         open,
         setOpen,
         close,
-        deleteAllCourses
+        deleteAllCourses,
       }}
     >
       {children}

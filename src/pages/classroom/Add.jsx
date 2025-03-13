@@ -5,6 +5,7 @@ import Navbar from "../../components/Navbar";
 import { useContext } from "react";
 import { roomsContext } from "../../context/ClassroomProvider";
 import SuccessModal from "../../components/SuccessModal";
+import { formatTimeTo12Hour } from "../../utils/formatTime";
 
 const AddClassroom = () => {
   const {
@@ -17,24 +18,25 @@ const AddClassroom = () => {
       name: "",
       capacity: "",
       availability: [{ day: "", timeSlots: [{ start: "", end: "" }] }],
+      
     },
   });
 
   const { addRoom, open, setOpen, close } = useContext(roomsContext);
 
   const onSubmit = (data) => {
-    const trimmedData = {
+    const formattedData = {
       ...data,
-      name: data.name.trim(),
-      availability: data.availability.map((slot) => ({
-        day: slot.day.trim(), // إزالة الفراغات من اليوم
-        timeSlots: slot.timeSlots.map((time) => ({
-          start: time.start.trim(), // إزالة الفراغات من وقت البداية
-          end: time.end.trim(), // إزالة الفراغات من وقت النهاية
+      availability: data.availability.map((schedule) => ({
+        ...schedule,
+        timeSlots: schedule.timeSlots.map((slot) => ({
+          start: formatTimeTo12Hour(slot.start),
+          end: formatTimeTo12Hour(slot.end),
         })),
       })),
     };
-    addRoom(trimmedData);
+    console.log(formattedData)
+    addRoom(formattedData);
   };
 
   return (

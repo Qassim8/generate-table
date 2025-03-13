@@ -112,7 +112,7 @@ function DepartmentProvider({ children }) {
   const deleteAllDepartment = async () => {
     const deletePromises = departments.map((depart) =>
       axios.delete(
-        `https://autogenerate-timetable-api.vercel.app/api/teacher/${depart._id}`,
+        `https://autogenerate-timetable-api.vercel.app/api/department/${depart._id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       )
     );

@@ -17,11 +17,13 @@ function TableOptions() {
   } = useForm({
     resolver: yupResolver(tableSchema),
   });
-    const {genarateTable} = useContext(tableContext)
+  const { genarateTable } = useContext(tableContext);
 
   const { teachers } = useContext(teacherContext);
   const { courses } = useContext(courseContext);
   const { rooms } = useContext(roomsContext);
+
+  const teacherRole = teachers.filter((teacher) => teacher.role === "teacher");
 
   // ✅ تحديث كل مصفوفة بشكل منفصل عند التحديد أو الإلغاء
   const handleCheckboxChange = (event, fieldName) => {
@@ -33,12 +35,12 @@ function TableOptions() {
       : currentValues.filter((id) => id !== value); // إزالة القيم غير المحددة
 
     setValue(fieldName, updatedValues); // تحديث القيم في `react-hook-form`
-    };
-    
-      const onSubmit = (data) => {
-          console.log("🚀 البيانات المرسلة:", data);
-          genarateTable(data)
-      };
+  };
+
+  const onSubmit = (data) => {
+    console.log("🚀 البيانات المرسلة:", data);
+    genarateTable(data);
+  };
 
   return (
     <form
@@ -51,21 +53,25 @@ function TableOptions() {
             Select Teacher
           </label>
           <div className="mt-2">
-            {teachers.map((teacher) => (
-              <div key={teacher._id}>
-                <input
-                  type="checkbox"
-                  name={teacher.name}
-                  value={teacher._id}
-                  {...register("teacherIds")}
-                  onChange={(e) => handleCheckboxChange(e, "teacherIds")}
-                  className="w-4 h-4 cursor-pointer peer-checked:bg-indigo-600"
-                />
-                <span className="text-gray-700 font-semibold ms-3">
-                  {teacher.name}
-                </span>
-              </div>
-            ))}
+            {teacherRole.length === 0 ? (
+              <div className="text-red-400">Add teachers and try again</div>
+            ) : (
+              teacherRole.map((teacher) => (
+                <div key={teacher._id}>
+                  <input
+                    type="checkbox"
+                    name={teacher.username}
+                    value={teacher._id}
+                    {...register("teacherIds")}
+                    onChange={(e) => handleCheckboxChange(e, "teacherIds")}
+                    className="w-4 h-4 cursor-pointer peer-checked:bg-indigo-600"
+                  />
+                  <span className="text-gray-700 font-semibold ms-3">
+                    {teacher.username}
+                  </span>
+                </div>
+              ))
+            )}
             {errors.teacherIds && (
               <p className="text-red-500 text-sm">
                 {errors.teacherIds.message}
@@ -78,21 +84,25 @@ function TableOptions() {
             Select Courses
           </label>
           <div className="mt-2">
-            {courses.map((course) => (
-              <div key={course._id}>
-                <input
-                  type="checkbox"
-                  name={course.title}
-                  value={course._id}
-                  {...register("courseIds")}
-                  onChange={(e) => handleCheckboxChange(e, "courseIds")}
-                  className="w-4 h-4 cursor-pointer peer-checked:bg-indigo-600"
-                />
-                <span className="text-gray-700 font-semibold ms-3">
-                  {course.title}
-                </span>
-              </div>
-            ))}
+            {courses.length === 0 ? (
+              <div className="text-red-400">Add courses and try again</div>
+            ) : (
+              courses.map((course) => (
+                <div key={course._id}>
+                  <input
+                    type="checkbox"
+                    name={course.title}
+                    value={course._id}
+                    {...register("courseIds")}
+                    onChange={(e) => handleCheckboxChange(e, "courseIds")}
+                    className="w-4 h-4 cursor-pointer peer-checked:bg-indigo-600"
+                  />
+                  <span className="text-gray-700 font-semibold ms-3">
+                    {course.title}
+                  </span>
+                </div>
+              ))
+            )}
             {errors.courseIds && (
               <p className="text-red-500 text-sm">{errors.courseIds.message}</p>
             )}
@@ -103,21 +113,25 @@ function TableOptions() {
             Select Classroom
           </label>
           <div className="mt-2">
-            {rooms.map((room) => (
-              <div key={room._id}>
-                <input
-                  type="checkbox"
-                  name={room.name}
-                  value={room._id}
-                  {...register("classroomIds")}
-                  onChange={(e) => handleCheckboxChange(e, "classroomIds")}
-                  className="w-4 h-4 cursor-pointer"
-                />
-                <span className="text-gray-700 font-semibold ms-3">
-                  {room.name}
-                </span>
-              </div>
-            ))}
+            {rooms.length === 0 ? (
+              <div className="text-red-400">Add classroom and try again</div>
+            ) : (
+              rooms.map((room) => (
+                <div key={room._id}>
+                  <input
+                    type="checkbox"
+                    name={room.name}
+                    value={room._id}
+                    {...register("classroomIds")}
+                    onChange={(e) => handleCheckboxChange(e, "classroomIds")}
+                    className="w-4 h-4 cursor-pointer"
+                  />
+                  <span className="text-gray-700 font-semibold ms-3">
+                    {room.name}
+                  </span>
+                </div>
+              ))
+            )}
             {errors.classroomIds && (
               <p className="text-red-500 text-sm">
                 {errors.classroomIds.message}
