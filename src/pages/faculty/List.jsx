@@ -9,17 +9,18 @@ import { departmentContext } from "../../context/DepartmentProvider";
 // import { yupResolver } from "@hookform/resolvers/yup";
 // import { departmentSchema } from "../../utils/validationSchema";
 // import UpdateModal from "../../components/UpdateModal";
-import DeleteAllModal from "../../components/DeleteAllModal";
-import DeleteAllButton from "../../components/DeleteAllButton";
+// import DeleteAllModal from "../../components/DeleteAllModal";
+// import DeleteAllButton from "../../components/DeleteAllButton";
 
 const DepartmentList = () => {
   const [open, setOpen] = useState(false);
   // const [show, setShow] = useState(false);
-  const [appear, setAppear] = useState(false);
+  // const [appear, setAppear] = useState(false);
   // const [departId, setDepartId] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
   // const [departmentName, setName] = useState("Computer Engineering");
   // const [batch, setBatch] = useState("");
+  const role = localStorage.getItem("userRole");
 
   const {
     departments,
@@ -27,7 +28,6 @@ const DepartmentList = () => {
     deleteDepartment,
     // updateDepartment,
     // updateId,
-    deleteAllDepartment
   } = useContext(departmentContext);
 
   // const {
@@ -122,52 +122,68 @@ const DepartmentList = () => {
   // }, [departId, updateId]);
 
   // Define table columns
-  const columns = [
-    {
-      name: "ID",
-      selector: (row) => row._id,
-      sortable: true,
-    },
-    {
-      name: "Department",
-      selector: (row) => row.departmentName,
-      sortable: true,
-    },
-    {
-      name: "Batch",
-      selector: (row) => row.batch,
-    },
-    {
-      name: "Action",
-      cell: (row) => (
-        <div className="flex justify-center">
-          {/* <button
+  const columns =
+    role !== "teacher" ? [
+      {
+        name: "ID",
+        selector: (row) => row._id,
+        sortable: true,
+      },
+      {
+        name: "Department",
+        selector: (row) => row.departmentName,
+        sortable: true,
+      },
+      {
+        name: "Batch",
+        selector: (row) => row.batch,
+      },
+      {
+        name: "Action",
+        cell: (row) => (
+          <div className="flex justify-center">
+            {/* <button
             onClick={() => handleEdit(row._id)}
             className="text-blue-500 hover:text-blue-700 hover:cursor-pointer"
           >
             <PencilSimple size={22} weight="light" />
           </button> */}
-          <button
-            onClick={() => handleDelete(row._id)}
-            className="text-red-500 hover:text-red-700 hover:cursor-pointer"
-          >
-            <TrashSimple size={22} weight="light" />
-          </button>
-        </div>
-      ),
-      ignoreRowClick: true,
-    },
-  ];
+            <button
+              onClick={() => handleDelete(row._id)}
+              className="text-red-500 hover:text-red-700 hover:cursor-pointer"
+            >
+              <TrashSimple size={22} weight="light" />
+            </button>
+          </div>
+        ),
+        ignoreRowClick: true,
+      },
+    ] : [
+      {
+        name: "ID",
+        selector: (row) => row._id,
+        sortable: true,
+      },
+      {
+        name: "Department",
+        selector: (row) => row.departmentName,
+        sortable: true,
+      },
+      {
+        name: "Batch",
+        selector: (row) => row.batch,
+      }
+    ];
 
-  const showDelete = () => setAppear(true);
-  const hideDelete = () => setAppear(false);
-  const deleteAll = () => {
-    deleteAllDepartment();
-    setAppear(false);
-  };
+  // const showDelete = () => setAppear(true);
+  // const hideDelete = () => setAppear(false);
+  // const deleteAll = () => {
+  //   deleteAllDepartment();
+  //   setAppear(false);
+  // };
 
   return (
-    <Navbar pageName="Batchs List">
+    <Navbar pageName="Batches List">
       {/* <UpdateModal
         open={show}
         setOpen={setShow}
@@ -184,14 +200,14 @@ const DepartmentList = () => {
         message="Are you sure you want to delete this batch?"
         title="Delete Batch"
       />
-      <DeleteAllModal
+      {/* <DeleteAllModal
         open={appear}
         setOpen={setAppear}
         confirmDelete={deleteAll}
         cancelDelete={hideDelete}
-        message="Are you sure you want to delete all batchs?"
-        title="Delete All Batchs"
-      />
+        message="Are you sure you want to delete all batches?"
+        title="Delete All Batches"
+      /> */}
       <Table
         title="Batch List"
         columns={columns}
@@ -199,8 +215,8 @@ const DepartmentList = () => {
         selectableRows
       />
       <div className="flex justify-between items-center">
-        <AddNewButton link="/department/new" page="Batchs" />
-        <DeleteAllButton page="Batchs" open={showDelete} />
+        {role !== "teacher" && <AddNewButton link="/department/new" page="Batches" />}
+        {/* <DeleteAllButton page="Batches" open={showDelete} /> */}
       </div>
     </Navbar>
   );

@@ -7,7 +7,7 @@ import {
 } from "@headlessui/react";
 import { useContext } from "react";
 import { tableContext } from "../context/TableProvider";
-import { Warning, WarningCircle } from "@phosphor-icons/react";
+import { Warning } from "@phosphor-icons/react";
 
 function TableModal() {
   const { empty, setEmpty } = useContext(tableContext);

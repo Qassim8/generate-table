@@ -8,8 +8,8 @@ import { teacherContext } from "../../context/TeachersProvider";
 import UpdateModal from "../../components/UpdateModal";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import DeleteAllButton from "../../components/DeleteAllButton";
-import DeleteAllModal from "../../components/DeleteAllModal";
+// import DeleteAllButton from "../../components/DeleteAllButton";
+// import DeleteAllModal from "../../components/DeleteAllModal";
 import AddDays from "../../components/AddDays";
 import { formatTimeTo12Hour } from "../../utils/formatTime";
 import { registerSchema } from "../../utils/validationSchema";
@@ -17,7 +17,7 @@ import { registerSchema } from "../../utils/validationSchema";
 const TeachersList = () => {
   const [open, setOpen] = useState(false);
   const [show, setShow] = useState(false);
-  const [appear, setAppear] = useState(false);
+  // const [appear, setAppear] = useState(false);
   const [visible, setVisible] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [teachId, setTeachId] = useState(null);
@@ -28,13 +28,15 @@ const TeachersList = () => {
     updateTeacher,
     addDays,
     deleteTeacher,
-    deleteAllTeacher,
+    // deleteAllTeacher,
   } = useContext(teacherContext);
   const [username, setName] = useState("");
   const [email, setEmail] = useState("");
   const [newDay, setNewDay] = useState("");
   const [newStart, setNewStart] = useState("");
   const [newEnd, setNewEnd] = useState("");
+
+  const role = localStorage.getItem("userRole");
 
   const teacherRole = teachers.filter((teacher) => teacher.role === "teacher");
 
@@ -91,7 +93,7 @@ const TeachersList = () => {
             <option value="Monday">Monday</option>
             <option value="Tuesday">Tuesday</option>
             <option value="Wednesday">Wednesday</option>
-            <option value="Thrusday">Thrusday</option>
+            <option value="Thursday">Thursday</option>
             <option value="Friday">Friday</option>
             <option value="Saturday">Saturday</option>
           </select>
@@ -178,23 +180,23 @@ const TeachersList = () => {
   };
 
   const ConfirmAddDay = () => {
-  addDays({
-    ...teacher,
-    schedules: [
-      ...(teacher.schedules || []), 
-      {
-        day: newDay,
-        timeSlots: [
-          {
-            start: formatTimeTo12Hour(newStart),
-            end: formatTimeTo12Hour(newEnd),
-          },
-        ],
-      },
-    ],
-  });
+    addDays({
+      ...teacher,
+      schedules: [
+        ...(teacher.schedules || []),
+        {
+          day: newDay,
+          timeSlots: [
+            {
+              start: formatTimeTo12Hour(newStart),
+              end: formatTimeTo12Hour(newEnd),
+            },
+          ],
+        },
+      ],
+    });
     setVisible(false)
-};
+  };
 
 
   // Confirm delete action
@@ -221,7 +223,7 @@ const TeachersList = () => {
   };
 
   // Define table columns
-  const columns = [
+  const columns = role !== "teacher" ? [
     {
       name: "ID",
       selector: (row) => row._id,
@@ -280,14 +282,49 @@ const TeachersList = () => {
       ),
       ignoreRowClick: true,
     },
-  ];
+  ]
+    :
+    [
+      {
+        name: "ID",
+        selector: (row) => row._id,
+      },
+      {
+        name: "Name",
+        selector: (row) => row.username,
+        sortable: true,
+      },
+      {
+        name: "Email",
+        selector: (row) => row.email,
+      },
+      {
+        name: "Worktimes",
+        selector: (row) => {
+          const day = row.schedules;
+          return day.map((day) => (
+            <div className="py-2" key={day._id}>
+              <p className="my-1">{day.day}</p>
+              {day.timeSlots.map((time) => (
+                <div key={time._id}>
+                  <span>{time.start}</span>
+                  {` - `}
+                  <span>{time.end}</span>
+                </div>
+              ))}
+            </div>
+          ));
+        },
+        sortable: true,
+      }
+    ];
 
-  const showDelete = () => setAppear(true);
-  const hideDelete = () => setAppear(false);
-  const deleteAll = () => {
-    deleteAllTeacher();
-    setAppear(false);
-  };
+  // const showDelete = () => setAppear(true);
+  // const hideDelete = () => setAppear(false);
+  // const deleteAll = () => {
+  //   deleteAllTeacher();
+  //   setAppear(false);
+  // };
 
   return (
     <Navbar pageName="Teachers List">
@@ -315,24 +352,24 @@ const TeachersList = () => {
         message="Are you sure you want to delete this teachers?"
         title="Delete Teachers"
       />
-      <DeleteAllModal
+      {/* <DeleteAllModal
         open={appear}
         setOpen={setAppear}
         confirmDelete={deleteAll}
         cancelDelete={hideDelete}
         message="Are you sure you want to delete all teacher?"
         title="Delete All Teacher"
-      />
+      /> */}
       <Table
         title="Teachers List"
         columns={columns}
         data={teacherRole}
         selectableRows
       />
-      <div className="flex justify-between items-center">
+      {role !== "teacher" && <div className="flex justify-between items-center">
         <AddNewButton link="/register" page="Teacher" />
-        <DeleteAllButton page="Teacher" open={showDelete} />
-      </div>
+        {/* <DeleteAllButton page="Teacher" open={showDelete} /> */}
+      </div>}
     </Navbar>
   );
 };
