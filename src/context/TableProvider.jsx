@@ -1,7 +1,9 @@
 import axios from "axios";
-import React, { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
+import PropTypes from 'prop-types';
 
 export const tableContext = createContext({});
+
 function TableProvider({ children }) {
   const [tableData, setTableData] = useState([]);
   const token = localStorage.getItem("userToken");
@@ -120,6 +122,11 @@ function TableProvider({ children }) {
       {children}
     </tableContext.Provider>
   );
+
 }
+
+TableProvider.propTypes = {
+  children: PropTypes.node.isRequired
+};
 
 export default TableProvider;

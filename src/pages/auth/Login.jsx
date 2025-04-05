@@ -29,6 +29,7 @@ const Login = () => {
         const role = data.user.role;
         localStorage.setItem("userToken", token);
         localStorage.setItem("userRole", role);
+        localStorage.setItem("userData", JSON.stringify(data));
         nav("/");
         window.location.reload();
       }

@@ -9,20 +9,22 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { courseSchema } from "../../utils/validationSchema";
 import UpdateModal from "../../components/UpdateModal";
-import DeleteAllButton from "../../components/DeleteAllButton";
-import DeleteAllModal from "../../components/DeleteAllModal";
+// import DeleteAllButton from "../../components/DeleteAllButton";
+// import DeleteAllModal from "../../components/DeleteAllModal";
 
 const ClassRoomList = () => {
   const [open, setOpen] = useState(false);
   const [show, setShow] = useState(false);
-  const [appear, setAppear] = useState(false);
+  // const [appear, setAppear] = useState(false);
   const [courseId, setCourseId] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
   const [title, setTitle] = useState("");
   const [hours, setHours] = useState("");
   const [batch, setBatch] = useState("");
-  const { courses, course, deleteCourse, updateId, updateCourse, deleteAllCourses } =
+  const { courses, course, deleteCourse, updateId, updateCourse } =
     useContext(courseContext);
+  const role = localStorage.getItem("userRole");
+
 
   const {
     formState: { errors },
@@ -130,54 +132,76 @@ const ClassRoomList = () => {
   };
 
   // Define table columns
-  const columns = [
-    {
-      name: "ID",
-      selector: (row) => row._id,
-      sortable: true,
-    },
-    {
-      name: "Title",
-      selector: (row) => row.title,
-      sortable: true,
-    },
-    {
-      name: "Hours",
-      selector: (row) => row.hours,
-      sortable: true,
-    },
-    {
-      name: "Batch",
-      selector: (row) => row.batch,
-    },
-    {
-      name: "Action",
-      cell: (row) => (
-        <div className="flex space-x-2">
-          <button
-            onClick={() => handleEdit(row._id)}
-            className="text-blue-500 hover:text-blue-700 hover:cursor-pointer"
-          >
-            <PencilSimple size={22} weight="light" />
-          </button>
-          <button
-            onClick={() => handleDelete(row._id)}
-            className="text-red-500 hover:text-red-700 hover:cursor-pointer"
-          >
-            <TrashSimple size={22} weight="light" />
-          </button>
-        </div>
-      ),
-      ignoreRowClick: true,
-    },
-  ];
+  const columns =
+    role !== "teacher" ? [
+      {
+        name: "ID",
+        selector: (row) => row._id,
+        sortable: true,
+      },
+      {
+        name: "Title",
+        selector: (row) => row.title,
+        sortable: true,
+      },
+      {
+        name: "Hours",
+        selector: (row) => row.hours,
+        sortable: true,
+      },
+      {
+        name: "Batch",
+        selector: (row) => row.batch,
+      },
+      {
+        name: "Action",
+        cell: (row) => (
+          <div className="flex space-x-2">
+            <button
+              onClick={() => handleEdit(row._id)}
+              className="text-blue-500 hover:text-blue-700 hover:cursor-pointer"
+            >
+              <PencilSimple size={22} weight="light" />
+            </button>
+            <button
+              onClick={() => handleDelete(row._id)}
+              className="text-red-500 hover:text-red-700 hover:cursor-pointer"
+            >
+              <TrashSimple size={22} weight="light" />
+            </button>
+          </div>
+        ),
+        ignoreRowClick: true,
+      },
+    ] :
+      [
+        {
+          name: "ID",
+          selector: (row) => row._id,
+          sortable: true,
+        },
+        {
+          name: "Title",
+          selector: (row) => row.title,
+          sortable: true,
+        },
+        {
+          name: "Hours",
+          selector: (row) => row.hours,
+          sortable: true,
+        },
+        {
+          name: "Batch",
+          selector: (row) => row.batch,
+        }
+      ];
 
-    const showDelete = () => setAppear(true);
-    const hideDelete = () => setAppear(false);
-    const deleteAll = () => {
-      deleteAllCourses();
-      setAppear(false);
-    };
+  // const showDelete = () => setAppear(true);
+  // const hideDelete = () => setAppear(false);
+  // const deleteAll = () => {
+  //   deleteAllCourses();
+  //   setAppear(false);
+  // };
 
   return (
     <Navbar pageName="Courses List">
@@ -197,14 +221,14 @@ const ClassRoomList = () => {
         message="Are you sure you want to delete this course?"
         title="Delete Courses"
       />
-      <DeleteAllModal
+      {/* <DeleteAllModal
         open={appear}
         setOpen={setAppear}
         confirmDelete={deleteAll}
         cancelDelete={hideDelete}
         message="Are you sure you want to delete all courses?"
         title="Delete All Courses"
-      />
+      /> */}
       <Table
         title="Courses List"
         columns={columns}
@@ -212,8 +236,8 @@ const ClassRoomList = () => {
         selectableRows
       />
       <div className="flex justify-between items-center">
-        <AddNewButton link="/course/new" page="Course" />
-        <DeleteAllButton page="Courses" open={showDelete} />
+        {role !== "teacher" && <AddNewButton link="/course/new" page="Course" />}
+        {/* <DeleteAllButton page="Courses" open={showDelete} /> */}
       </div>
     </Navbar>
   );
