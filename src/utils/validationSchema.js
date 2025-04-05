@@ -24,6 +24,7 @@ export const registerSchema = yup.object().shape({
     .string()
     .min(10, "Phone must be at least 10 numbers")
     .required("Phone number is required"),
+  profileImage: yup.string(),
   address: yup.string().required("Address is required"),
   password: yup
     .string()
@@ -87,7 +88,6 @@ export const departmentSchema = yup.object({
   departmentName: yup.string().required("Department name is required"),
   batch: yup.string().required("Batch is required"),
 });
-
 
 export const courseSchema = yup.object({
   title: yup.string().required("Course title is required"),

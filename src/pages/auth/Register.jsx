@@ -40,7 +40,7 @@ const Register = () => {
   const onSubmit = (data) => {
     const formattedData = {
       ...data,
-      schedules: data.schedules.map((schedule) => ({
+      schedules: data.schedules?.map((schedule) => ({
         ...schedule,
         timeSlots: schedule.timeSlots.map((slot) => ({
           start: formatTimeTo12Hour(slot.start),
@@ -157,6 +157,31 @@ const Register = () => {
                     </p>
                   </div>
                 </div>
+
+                <div className="flex flex-col md:flex-row justify-between md:items-center gap-2 md:gap-5">
+                  <div className="flex-1">
+                    <label
+                      htmlFor="pic"
+                      className="block text-sm/6 font-medium text-gray-900"
+                    >
+                      Photo
+                    </label>
+                    <div className="mt-2">
+                        <label>
+                          <div className="mb-5 w-full h-11 rounded-sm border border-gray-300 justify-between items-center inline-flex">
+                            <input type="file" {...register("profileImage")} />
+                            <div className="flex w-28 h-11 px-2 flex-col bg-indigo-600 rounded-r-sm shadow text-white text-xs font-semibold leading-4 items-center justify-center cursor-pointer focus:outline-none">
+                              Choose Image
+                            </div>
+                          </div>
+                      </label>
+                    </div>
+                    <p className="text-sm/6 text-red-600">
+                      {errors.profileImage?.message}
+                    </p>
+                  </div>
+                </div>
+
                 <div className="flex flex-col md:flex-row justify-between md:items-center gap-2 md:gap-5">
                   <div className="flex-1">
                     <label
@@ -293,17 +318,6 @@ const Register = () => {
                               </span>
                             </div>
                           ))}
-                          {/* <input
-                            id="departId"
-                            type="radio"
-                            name="departmentId"
-                            value="Computer Engineering"
-                            {...register("departmentId")}
-                            
-                          />
-                          <label htmlFor="admin" className="text-md ms-2 mt-0">
-                            Computer Engineering
-                          </label> */}
                           {errors.departmentId && (
                             <p className="text-red-500 text-sm">
                               {errors.departmentId.message}

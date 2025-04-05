@@ -17,6 +17,8 @@
     "@tailwindcss/vite": "^4.0.5",
     "apexcharts": "^4.4.0",
     "axios": "^1.7.9",
+    "jspdf": "^3.0.1",
+    "jspdf-autotable": "^5.0.2",
     "prop-types": "^15.8.1",
     "react": "^19.0.0",
     "react-apexcharts": "^1.7.0",

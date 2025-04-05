@@ -1,6 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import { tableContext } from "../context/TableProvider";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { Download } from "@phosphor-icons/react";
 
 function TableContent() {
   const role = localStorage.getItem("userRole");
@@ -122,6 +125,64 @@ function TableContent() {
     },
   };
 
+  const exportScheduleToPDF = () => {
+    if (tableData.length === 0) {
+      alert("No data available");
+      return;
+    }
+
+    const doc = new jsPDF();
+
+    const uniqueTimes = [
+      ...new Set(
+        tableData.map((item) => `${item.time.start} - ${item.time.end}`)
+      ),
+    ].sort();
+
+    const headers = ["Day", ...uniqueTimes];
+
+    const body = daysOfWeek.map((day) => {
+      const row = [day];
+
+      uniqueTimes.forEach((time) => {
+        const sessions = tableData.filter(
+          (session) =>
+            session.day === day &&
+            `${session.time.start} - ${session.time.end}` === time
+        );
+
+        if (sessions.length > 0) {
+          const cellText = sessions
+            .filter(
+              (session) => session.status === "approved" || role === "admin"
+            )
+            .map((session) => {
+              return `${session.course}\nDr. ${session.teacher}\n${session.classroom}`;
+            })
+            .join("\n\n");
+
+          row.push(cellText);
+        } else {
+          row.push("---");
+        }
+      });
+
+      return row;
+    });
+
+
+    autoTable(doc,{
+      head: [headers],
+      body,
+      styles: { fontSize: 8, cellPadding: 2 },
+      headStyles: { fillColor: [41, 128, 185], halign: "center" },
+      columnStyles: { 0: { fontStyle: "bold", halign: "center" } },
+      margin: { top: 20 },
+    });
+
+    doc.save("schedule.pdf");
+  };
+
   return (
     <div>
       <DataTable
@@ -131,6 +192,13 @@ function TableContent() {
         highlightOnHover
         responsive
       />
+      <button
+        onClick={exportScheduleToPDF}
+        className="flex justify-center items-center gap-2 my-5 py-2 px-6 bg-emerald-500 text-white rounded-md cursor-pointer"
+      >
+        <Download />
+        <span>Save Table</span>
+      </button>
     </div>
   );
 }
