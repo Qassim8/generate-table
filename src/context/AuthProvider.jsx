@@ -53,7 +53,7 @@ function AuthProvider({ children }) {
     };
     try {
       const response = await axios.put(
-          `https://autogenerate-timetable-api.vercel.app/api/auth/${data.id}`,
+        `https://autogenerate-timetable-api.vercel.app/api/auth/${data.id}`,
         updatedDay,
         { headers: { Authorization: `Bearer ${token}` } }
       );
