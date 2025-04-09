@@ -11,7 +11,7 @@ import { authContext } from "../../context/AuthProvider";
 const Register = () => {
 
   const [teacher, setTeacher] = useState(false);
-  const {signupUser, exist, open, setOpen} = useContext(authContext)
+  const { signupUser, exist, open, setOpen } = useContext(authContext)
   const { courses } = useContext(courseContext);
   const { departments } = useContext(departmentContext);
   const {
@@ -167,13 +167,13 @@ const Register = () => {
                       Photo
                     </label>
                     <div className="mt-2">
-                        <label>
-                          <div className="mb-5 w-full h-11 rounded-sm border border-gray-300 justify-between items-center inline-flex">
-                            <input type="file" {...register("profileImage")} />
-                            <div className="flex w-28 h-11 px-2 flex-col bg-indigo-600 rounded-r-sm shadow text-white text-xs font-semibold leading-4 items-center justify-center cursor-pointer focus:outline-none">
-                              Choose Image
-                            </div>
+                      <label>
+                        <div className="mb-5 w-full h-11 rounded-sm border border-gray-300 justify-between items-center inline-flex">
+                          <input type="file" {...register("profileImage")} />
+                          <div className="flex w-28 h-11 px-2 flex-col bg-indigo-600 rounded-r-sm shadow text-white text-xs font-semibold leading-4 items-center justify-center cursor-pointer focus:outline-none">
+                            Choose Image
                           </div>
+                        </div>
                       </label>
                     </div>
                     <p className="text-sm/6 text-red-600">
@@ -366,7 +366,7 @@ const Register = () => {
                             <option value="Monday">Monday</option>
                             <option value="Tuesday">Tuesday</option>
                             <option value="Wednesday">Wednesday</option>
-                            <option value="Thrusday">Thrusday</option>
+                            <option value="Thursday">Thursday</option>
                             <option value="Friday">Friday</option>
                             <option value="Saturday">Saturday</option>
                           </select>
